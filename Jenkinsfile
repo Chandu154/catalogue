@@ -2,11 +2,21 @@
 pipeline {
     agent { node { label 'AGENT-1' } }
     stages {
+        stage('Get version'){
+            steps{
+                script{
+                    def packageJson = readJSON file: 'package.json'
+                   def packageVersion = packageJSON.version
+                   echo "${packageJSONVersion}"
+                }
+            }
+        }
         stage('Install depdencies') {
             steps {
                 sh 'npm install'
             }
         }
+
         stage('Unit test') {
             steps {
                 echo "unit testing is done here"
@@ -25,14 +35,16 @@ pipeline {
                 sh 'zip -r catalogue.zip ./* --exclude=.git --exclude=.zip'
             }
         }
+
+        // Install pipeline utility steps plugin, if not installed.
         stage('Publish Artifact') {
             steps {
                 nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
-                    nexusUrl: '54.89.242.4:8081/',
+                    nexusUrl: '172.31.88.69:8081/',
                     groupId: 'com.roboshop',
-                    version: '1.0.1',
+                    version: '1.0.3',
                     repository: 'catalogue',
                     credentialsId: 'nexus-auth',
                     artifacts: [
