@@ -60,11 +60,13 @@ pipeline {
             }
         }
 
-
-
+         // upstream job is CI 
+      // here  I need to configure downstream job.  I have to pass package version for deployment for which one to deploy
+      // This job will wait untill downstream job is over  
         stage('Deploy') {
             steps {
                 echo "Deployment"
+                build job: "../catalogue-deploy", wait: true
             }
         }
     }
@@ -76,11 +78,3 @@ pipeline {
         }
     }
 }
-
-// stage('Get version'){
-//             steps{
-//                 def packageJson = readJSON file: 'package.json'
-//             def packageVersion = packageJson.version
-//             echo "version: ${packageVersion}"
-//             }
-//         }
