@@ -65,9 +65,14 @@ pipeline {
       // This job will wait untill downstream job is over  
         stage('Deploy') {
             steps {
-                echo "Deployment"
-                build job: "../catalogue-deploy", wait: true
+                script{
+                    echo "Deployment"
+                    def params = [
+                        string(name: 'version', value: "$packageVersion")
+                    ]
+                build job: "../catalogue-deploy", wait: true, parameters: params
             }
+                   }
         }
     }
 
