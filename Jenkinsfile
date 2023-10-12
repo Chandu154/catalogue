@@ -1,6 +1,13 @@
 pipeline {
     agent { node { label 'AGENT-1' } }
     stages {
+        stage('Get version'){
+            steps{
+                def packageJson = readJSON file: 'package.json'
+            def packageVersion = packageJson.version
+            echo "version: ${packageVersion}"
+            }
+        }
         stage('Install depdencies') {
             steps {
                 sh 'npm install'
@@ -30,7 +37,7 @@ pipeline {
                 nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
-                    nexusUrl: '44.202.59.244:8081/',
+                    nexusUrl: '172.31.88.69:8081/',
                     groupId: 'com.roboshop',
                     version: '1.3.0',
                     repository: 'catalogue',
