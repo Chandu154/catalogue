@@ -6,22 +6,30 @@ pipeline {
                 sh 'npm install'
             }
         }
+
         stage('Unit test') {
             steps {
                 echo "unit testing is done here"
             }
         }
-        //sonar-scanner command expect sonar-project.properties should be available
-        // stage('Sonar Scan') {
-        //     steps {
-        //         sh 'ls -ltr'
-        //         sh 'sonar-scanner'
-        //     }
-        // }
+
+        sonar-scanner command expect sonar-project.properties should be available
+        stage('Sonar Scan') {
+            steps {
+                echo "sonar scan done"
+            }
+        }
+ 
         stage('Build') {
             steps {
                 sh 'ls -ltr'
                 sh 'zip -r catalogue.zip ./* --exclude=.git --exclude=.zip'
+            }
+        }
+
+        stage('SAST') {
+            steps {
+                echo "SAST done"
             }
         }
 
@@ -30,7 +38,7 @@ pipeline {
                 nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
-                    nexusUrl: '44.202.59.244:8081/',
+                    nexusUrl: '54.89.242.4:8081/',
                     groupId: 'com.roboshop',
                     version: '1.0.0',
                     repository: 'catalogue',
