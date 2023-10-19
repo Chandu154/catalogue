@@ -1,3 +1,5 @@
+// this is our CI job
+
 pipeline {
     agent { node { label 'AGENT-1' } }
     
@@ -61,7 +63,7 @@ pipeline {
         }
 
          // upstream job is CI 
-      // here  I need to configure downstream job.  I have to pass package version for deployment for which one to deploy
+      // here  I need to configure downstream job.  I have to pass package version for catalogue-deployment for which one to deploy
       // This job will wait untill downstream job is over  
         stage('Deploy') {
             steps {
@@ -83,3 +85,4 @@ pipeline {
         }
     }
 }
+
