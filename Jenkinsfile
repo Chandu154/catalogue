@@ -1,3 +1,2 @@
 #!groovy
-
 @Library('roboshop-library')
