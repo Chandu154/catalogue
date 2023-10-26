@@ -58,7 +58,7 @@ app.use(bodyParser.json());
 
 app.get('/health', (req, res) => {
     var stat = {
-        app: 'OKk-02',
+        app: 'OKk-200',
         mongo: mongoConnected
     };
     res.json(stat);
