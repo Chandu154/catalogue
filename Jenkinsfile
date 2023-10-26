@@ -1,6 +1,6 @@
 #!groovy
 // it means the libraries will be downloaded and accessible at run time
-@Library('roboshop-library') _
+@Library('roboshop-shared-library') _
 
 def configMap = [
     application: "nodeJSVM",
