@@ -1,74 +1,20 @@
 
-pipeline {
-    agent { node { label 'AGENT-1' } }
-    stages {
-        stage('Get version'){
-            steps{
-                script{
-                    def packageJson = readJSON file: 'package.json'
-                   def packageVersion = packageJSON.version
-                   echo "${packageJSONVersion}"
-                }
-            }
-        }
-        stage('Install depdencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+#!groovy
+// it means the libraries will be downloaded and accessible at run time
+@Library('roboshop-shared-library') _
 
-        stage('Unit test') {
-            steps {
-                echo "unit testing is done here"
-            }
-        }
-        //sonar-scanner command expect sonar-project.properties should be available
-        // stage('Sonar Scan') {
-        //     steps {
-        //         sh 'ls -ltr'
-        //         sh 'sonar-scanner'
-        //     }
-        // }
-        stage('Build') {
-            steps {
-                sh 'ls -ltr'
-                sh 'zip -r catalogue.zip ./* --exclude=.git --exclude=.zip'
-            }
-        }
+def configMap = [
+    application: "nodeJSVM",
+    component: "catalogue"
+]
+env
 
-        // Install pipeline utility steps plugin, if not installed.
-        stage('Publish Artifact') {
-            steps {
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: '172.31.88.69:8081/',
-                    groupId: 'com.roboshop',
-                    version: '1.0.3',
-                    repository: 'catalogue',
-                    credentialsId: 'nexus-auth',
-                    artifacts: [
-                        [artifactId: 'catalogue',
-                        classifier: '',
-                        file: 'catalogue.zip',
-                        type: 'zip']
-                    ]
-                )
-            }
-        }
+// this is .groovy file name and function inside it
+//if not master then trigger pipeline
+if ( ! env.BRANCH_NAME.equalsIgnoreCase('master')){
+    pipelineDecission.decidePipeline(configMap)
+}
+else{
+    echo "master PROD deployment should happen through CR"
 
-        
-        stage('Deploy') {
-            steps {
-                echo "Deployment"
-            }
-        }
-    }
-
-    post{
-        always{
-            echo 'cleaning up workspace'
-            deleteDir()
-        }
-    }
 }
